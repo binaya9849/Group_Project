@@ -16,11 +16,13 @@
   "version": "1.0.0",
   "description": "yo yo yo",
   "main": "index.js",
-  "devDependencies": {},
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start":"nodeserver.js",
-    "dev":"nodemod server.js"
+    "start": "nodeserver.js",
+    "dev": "nodemon server.js"
   },
   "repository": {
     "type": "git",
