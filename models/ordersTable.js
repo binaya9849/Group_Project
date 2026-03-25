@@ -13,11 +13,7 @@ export async function createOrdersTable() {
          FOREIGN KEY (buyer_id) REFERENCES users(id) ON DELETE CASCADE);`;
     await database.query(query);
   } catch (error) {
-<<<<<<< HEAD
-    console.error("❌ Failed To Create Orders Table.", error);
-=======
     console.error("Failed To Create Orders Table.", error);
->>>>>>> 6a03ee5 (yout turn)
     process.exit(1);
   }
 }

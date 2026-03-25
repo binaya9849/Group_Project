@@ -29,11 +29,5 @@ app.use(
     useTempFiles: true,
   })
 );
-<<<<<<< HEAD
  createTables()
-=======
-
-
-createTables()
->>>>>>> 6a03ee5 (yout turn)
 export default app;
