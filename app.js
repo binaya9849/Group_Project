@@ -9,7 +9,7 @@ const app = express();
 
 config({ path: "./config/config.env" });
 
-// CORS (FIXED)
+
 app.use(
   cors({
     origin: [process.env.FRONTEND_URL, process.env.DASHBOARD_URL],
@@ -18,7 +18,7 @@ app.use(
   })
 );
 
-// Middlewares
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,5 +29,11 @@ app.use(
     useTempFiles: true,
   })
 );
+<<<<<<< HEAD
  createTables()
+=======
+
+
+createTables()
+>>>>>>> 6a03ee5 (yout turn)
 export default app;
