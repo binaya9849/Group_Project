@@ -6,7 +6,7 @@ export async function createProductsTable() {
          id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
          name VARCHAR(255) NOT NULL,
          description TEXT NOT NULL,
-         price DECIMAL(5,2) NOT NULL CHECK (price >= 0),
+         price DECIMAL(7,2) NOT NULL CHECK (price >= 0),
          category VARCHAR(100) NOT NULL,
          ratings DECIMAL(3,2) DEFAULT 0 CHECK (ratings BETWEEN 0 AND 5),
          images JSONB DEFAULT '[]'::JSONB,
@@ -14,17 +14,9 @@ export async function createProductsTable() {
          created_by UUID NOT NULL,
          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
          FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE);`;
-<<<<<<< HEAD
-
-
-    await database.query(query);
-  } catch (error) {
-    console.error("❌ Failed To Create Products Table.", error);
-=======
     await database.query(query);
   } catch (error) {
     console.error("Failed To Create Products Table.", error);
->>>>>>> 6a03ee5 (yout turn)
     process.exit(1);
   }
 }
