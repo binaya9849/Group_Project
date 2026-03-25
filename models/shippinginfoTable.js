@@ -14,7 +14,11 @@ export async function createShippingInfoTable() {
          FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE);`;
     await database.query(query);
   } catch (error) {
+<<<<<<< HEAD
     console.error("❌ Failed To Create Shipping Info Table.", error);
+=======
+    console.error("Failed To Create Shipping Info Table.", error);
+>>>>>>> 6a03ee5 (yout turn)
     process.exit(1);
   }
 }

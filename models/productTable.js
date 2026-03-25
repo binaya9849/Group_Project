@@ -14,11 +14,17 @@ export async function createProductsTable() {
          created_by UUID NOT NULL,
          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
          FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE);`;
+<<<<<<< HEAD
 
 
     await database.query(query);
   } catch (error) {
     console.error("❌ Failed To Create Products Table.", error);
+=======
+    await database.query(query);
+  } catch (error) {
+    console.error("Failed To Create Products Table.", error);
+>>>>>>> 6a03ee5 (yout turn)
     process.exit(1);
   }
 }
