@@ -1,0 +1,85 @@
+
+import {
+  X,
+  Home,
+  Package,
+  Info,
+  HelpCircle,
+  ShoppingCart,
+  List,
+  Phone,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+
+const Sidebar = () => {
+  const {authUser} = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  const menuItems = [
+    { name: "Home", path: "/", icon: Home },
+    { name: "Products", path: "/products", icon: Package },
+    { name: "About", path: "/about", icon: Info }, 
+    { name: "FAQ", path: "/faq", icon: HelpCircle },
+    { name: "Contact", path: "/contact", icon: Phone },
+    { name: "Cart", path: "/cart", icon: ShoppingCart },
+    authUser && { name: "My Orders", path: "/orders", icon: List },
+  ];
+
+  const {isSideBarOpen} = useSelector(state => state.popup);
+  if (!isSideBarOpen) return null;
+
+
+  
+  return (
+  <>
+  {/*OVERLAY*/}
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40" 
+       onClick={() => dispatch(toggleSidebar())}
+    
+      />
+      {/*SIDEBAR*/}
+      <div className="fixed left-0 top-0 w-80 z-50 h-full glass-panel animate-slide-in-left ">
+        <div className="flex items-center justify-between p-6 border-b border-[hsla(var(--glass-border))]">
+          <h2 className="text-xl font-semibold text-primary"> Menu </h2>
+          <button
+            onClick={() => dispatch(toggleSidebar())}
+            className="p-2 rounded-lg glass-card hover:glow-on-hover animate-smooth"
+          >
+            <X className="h-6 w-6 text-foreground" />
+          </button>
+
+        </div>
+        <nav className="p-6">
+          <ul className="space-y-2">
+            {
+              menuItems.filter(Boolean).map(item=>{
+                return (
+                  <li key={item.name}>
+                    <Link 
+                      to={item.path} 
+                      onClick={() => dispatch(toggleSidebar())}
+                      className="flex items-center space-x-3 p-3 rounded-lg glass-card 
+                      hover:glow-on-hover animate-smooth text-foreground hover:text-primary group"
+                    >
+                      <item.icon className="h-5 w-5 text-foreground group-hover:text-primary" />
+                      <span className="font-medium"> {item.name} </span>
+
+                    </Link>
+                  </li>
+                )
+              })
+
+            }
+          </ul>
+          
+        </nav>
+
+      </div>
+    
+
+    </>
+  );
+};
+
+export default Sidebar;
