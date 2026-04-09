@@ -80,7 +80,7 @@ export const logout = catchAsyncErrors(async (req, res, next) => {
 
 export const forgotPassword = catchAsyncErrors(async (req, res, next) => {
   const { email } = req.body;
-  const { frontendUrl } = req.query;
+  const frontendUrl = req.query.frontendUrl || process.env.FRONTEND_URL;
   let userResult = await database.query(
     `SELECT * FROM users WHERE email = $1`,
     [email]

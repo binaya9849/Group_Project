@@ -63,8 +63,9 @@ export const logout = createAsyncThunk("_/logout", async (data, thunkAPI) => {
 export const forgotPassword = createAsyncThunk("auth/forgot/Password", 
   async (email, thunkAPI) => {
   try {
-      const res = await axiosInstance.post("/auth/forgot/Password?frontendUrl=http://localhost:5173", email);
-      toast.success("res.data.message");
+  const payload = typeof email === "string" ? { email } : email;
+  const res = await axiosInstance.post("/auth/password/forgot?frontendUrl=http://localhost:5173", payload);
+  toast.success(res.data.message);
       return null;
 
     
@@ -80,7 +81,7 @@ export const resetPassword = createAsyncThunk("auth/password/reset",
       const res = await axiosInstance.put(`/auth/password/reset/${token}`, { 
         password, 
         confirmPassword });
-      toast.success("res.data.message");
+      toast.success(res.data.message);
       return res.data.user;
 
     

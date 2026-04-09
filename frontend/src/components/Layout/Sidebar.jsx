@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import { toggleSidebar } from "../../store/slices/popupSlice";
 
 const Sidebar = () => {
   const {authUser} = useSelector((state) => state.auth);
@@ -26,8 +27,8 @@ const Sidebar = () => {
     authUser && { name: "My Orders", path: "/orders", icon: List },
   ];
 
-  const {isSideBarOpen} = useSelector(state => state.popup);
-  if (!isSideBarOpen) return null;
+  const { isSidebarOpen } = useSelector((state) => state.popup);
+  if (!isSidebarOpen) return null;
 
 
   
