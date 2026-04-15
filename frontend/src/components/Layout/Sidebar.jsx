@@ -47,7 +47,7 @@ const Sidebar = () => {
             onClick={() => dispatch(toggleSidebar())}
             className="p-2 rounded-lg glass-card hover:glow-on-hover animate-smooth"
           >
-            <X className="h-6 w-6 text-foreground" />
+            <X className="h-5 w-5 text-foreground" />
           </button>
 
         </div>
