@@ -9,8 +9,40 @@ import Login from "./pages/Login";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import { ToastContainer } from "react-toastify";
+import { useSelector } from "react-redux";
+
+import Dashboard from "./components/Dashboard";
+import Orders from "./components/Orders";
+import Users from "./components/Users";
+import Profile from "./components/Profile";
+import Products from "./components/Products";
 
 function App() {
+
+  const { openedComponent } = useSelector(state => state.extra);
+  const renderDashboardContent = () => {
+    switch (openedComponent) {
+      case "Dashboard":
+          <Dashboard/>
+        break;
+      case "Orders":
+          <Orders/>
+        break;
+      case "Users":
+          <Users/>
+        break;
+      case "Profile":
+          <Profile/>
+        break;
+      case "Products":
+          <Products/>
+        break;
+
+      default:
+        return <Dashboard />;
+    }
+     
+
 
   return (
     <Router>
