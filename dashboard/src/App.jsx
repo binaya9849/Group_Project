@@ -18,44 +18,25 @@ import Profile from "./components/Profile";
 import Products from "./components/Products";
 
 function App() {
+  const { openedComponent } = useSelector((state) => state.extra);
+  const { user, isAuthenticated } = useSelector((state) => state.auth);
 
-<<<<<<< HEAD
-  const {openedComponent}  = useSelector((state) => state.extra);
   const renderDashboardContent = () => {
     switch (openedComponent) {
       case "Dashboard":
         return <Dashboard />;
+      case "Orders":
+        return <Orders />;
+      case "Users":
+        return <Users />;
+      case "Profile":
+        return <Profile />;
+      case "Products":
+        return <Products />;
       default:
         return <Dashboard />;
     }
   };
-=======
-  const { openedComponent } = useSelector(state => state.extra);
-  const { user, isAuthenticated } = useSelector(state => state.auth);
-  const renderDashboardContent = () => {
-    switch (openedComponent) {
-      case "Dashboard":
-          <Dashboard/>
-        break;
-      case "Orders":
-          <Orders/>
-        break;
-      case "Users":
-          <Users/>
-        break;
-      case "Profile":
-          <Profile/>
-        break;
-      case "Products":
-          <Products/>
-        break;
-
-      default:
-        return <Dashboard />;
-    }
-     
->>>>>>> 810d088b0b247c480c10d470d79b5c05060d2410
-
 
   return (
     <Router>
@@ -63,7 +44,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/password/forgot" element={<ForgotPassword />} />
         <Route path="/password/reset/:token" element={<ResetPassword />} />
-        
+
         {/* Protected Admin Route */}
         <Route
           path="/"
