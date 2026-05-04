@@ -12,6 +12,17 @@ import { ToastContainer } from "react-toastify";
 
 function App() {
 
+  const {openedComponent}  = useSelector((state) => state.extra);
+  const renderDashboardContent = () => {
+    switch (openedComponent) {
+      case "Dashboard":
+        return <Dashboard />;
+      default:
+        return <Dashboard />;
+    }
+  };
+
+
   return (
     <Router>
       <Routes>
