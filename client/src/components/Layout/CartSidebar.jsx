@@ -48,7 +48,7 @@ const CartSidebar = () => {
               <div className="text-center py-12">
                 <p className="text-muted-foreground">Your cart is empty.</p>
                 <Link 
-                to={"/product"}
+                to={"/products"}
                 onClick={() => dispatch(toggleCart())}
                 className="inline-block mt-6 px-6 py-2 gradient-primary-foreground rounded-lg hover:glow-on-hover animate-smooth "
                 >Browse Products
@@ -64,7 +64,7 @@ const CartSidebar = () => {
                     return( 
                       <div key={item.product.id} className="glass-card p-4">
                         
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-start space-x-4">
                           <img 
                           src={item.product.image[0].url}
                           alt={item.product.name}
@@ -73,10 +73,10 @@ const CartSidebar = () => {
                           <div className="flex-1 min-w-0">
                             <h3 className="font-semibold text-foreground truncate">{item.product.name}</h3>
                             <p className="text-primary font-semibold">${item.product.price}</p>
-                          </div>
+                             
+                             {/* Quantity Controls */}
 
-                          {/* Quantity Controls */}
-                          <div className="flex items-center space-x-3 mt-2">
+                            <div className="flex items-center space-x-2 mt-2">
                             <button className="p-1 rounded glass-card hover:glow-on-hover animate-smooth"
                             onClick={() => {
                               updateQuantity(
@@ -86,7 +86,7 @@ const CartSidebar = () => {
                             }
 
                             }>
-                              <Minus className="w-4 h-4 text-primary"/>
+                              <Minus className="w-4 h-4"/>
                             </button>
                             <span className="w-8 text-center font-semibold">
                               {item.quantity}
@@ -99,7 +99,7 @@ const CartSidebar = () => {
                             }
 
                             }>
-                              <Plus className="w-4 h-4 text-primary"/>
+                              <Plus className="w-4 h-4"/>
                             </button>
                             <button className="p-1 rounded glass-card hover:glow-on-hover animate-smooth ml-2 text-destructive"
                             onClick={() => {
@@ -107,10 +107,14 @@ const CartSidebar = () => {
                             }
                           }
                             >
-                              <Trash2 className="w-4 h-4 text-destructive-foreground"/>
+                              <Trash2 className="w-4 h-4"/>
                             </button>
 
                           </div>
+                          </div>
+
+                          
+                          
 
 
                         </div>
@@ -128,7 +132,7 @@ const CartSidebar = () => {
                 </div>
                 <Link to={"/cart"}
                  onClick={() => dispatch(toggleCart())}
-                className="w-full block text-center gradient-primary text-primary-foreground rounded-lg 
+                className="w-full py-3 block text-center gradient-primary text-primary-foreground rounded-lg 
                 hover:glow-on-hover animate-smooth font-semibold"
                 >
                   View Cart & Checkout
