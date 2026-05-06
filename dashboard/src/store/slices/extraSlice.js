@@ -17,6 +17,7 @@ const extraSlice = createSlice({
     toggleNavbar: (state) => {
       state.isNavbarOpened = !state.isNavbarOpened;
     },
+<<<<<<< HEAD
 
     toggleCreateProductModal: (state) => {
       state.isCreateProductModalOpened =
@@ -35,6 +36,21 @@ const extraSlice = createSlice({
   },
 });
 
+=======
+    toggleCreateProductModal: (state) => {
+      state.isCreateProductModalOpened = !state.isCreateProductModalOpened;
+    },
+    toggleViewProductModal: (state) => {
+      state.isViewProductModalOpened = !state.isViewProductModalOpened;
+    },
+    toggleUpdateProductModal: (state) => {
+      state.isUpdateProductModalOpened =
+        !state.isUpdateProductModalOpened;
+    },
+  },
+});
+
+>>>>>>> 072a69ebe75979ab4f7d1cacf3b80406473f30de
 export const {
   toggleComponent,
   toggleNavbar,

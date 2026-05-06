@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+<<<<<<< HEAD
 import axios from "axios";
 
 const initialState = {
@@ -7,6 +8,9 @@ const initialState = {
   isAuthenticated: false,
   error: null,
 };
+=======
+import { axiosInstance } from "../../lib/axios";
+>>>>>>> 072a69ebe75979ab4f7d1cacf3b80406473f30de
 
 const authSlice = createSlice({
   name: "auth",
@@ -108,6 +112,7 @@ const authSlice = createSlice({
     },
   },
 });
+<<<<<<< HEAD
 
 export const {
   loginRequest,
@@ -179,6 +184,112 @@ export const logout = () => async (dispatch) => {
     dispatch(logoutFailed());
   }
 };
+=======
+export const login = (data) => async (dispatch) => {
+    dispatch(authSlice.actions.loginRequest());
+    try {
+        await axiosInstance.post("/auth/login", data).then((res) => {
+        if (res.data.user.role === 'admin') {
+            dispatch(authSlice.actions.loginSuccess(res.data.user));
+            toast.success(res.data.message);
+        } else {
+            dispatch(authSlice.actions.loginFailed());
+            toast.error(res.data.message);
+        }
+      });
+    } catch (error) {
+      dispatch(authSlice.actions.loginFailed());
+      toast.error(error.response.data.message || "Login Failed");
+    }
+};
+
+export const getUser = () => async (dispatch) => {
+  dispatch(authSlice.actions.loginRequest());
+  try {
+    await axiosInstance.get("/auth/me").then((res) => {
+       dispatch(authSlice.actions.getUserSuccess(res.data.user));
+      });
+      } catch (error) {
+        dispatch(authSlice.actions.getUserFailed());
+      }
+};
+
+export const logout = () => async (dispatch) => {
+  dispatch(authSlice.actions.logoutRequest());
+  try {
+    await axiosInstance.get("/auth/logout").then((res) => {
+    dispatch(authSlice.actions.resetAuthSuccess());
+    toast.success(res.data.message);
+    });
+  } catch (error) {
+    dispatch(authSlice.actions.getUserFailedFailed());
+    toast.error(error.response.data.message || "Logout Failed.");
+    dispatch(authSlice.actions.resetAuthSlice());
+  }
+};
+
+export const forgotPassword = (email) => async (dispatch) => {
+  dispatch(authSlice.actions.forgotPasswordRequest());
+  try{
+    await axiosInstance
+    .post("/auth/password/forgot?frontendUrl=http://localhost:5174",  email )
+     .then((res) => {
+        dispatch(authSlice.actions.forgotPasswordSuccess());
+        toast.success(res.data.message);
+      });
+  } catch (error) {
+    dispatch(authSlice.actions.forgotPasswordFailed());
+    toast.error(
+      error.response.data.message || "cannot request for reset password."
+   );
+ 
+ }
+};
+export const resetPassword = (newData, token) => async (dispatch) => {
+  dispatch(authSlice.actions.resetPasswordRequest());
+  try{
+    await axiosInstance
+    .post(`/auth/password/reset/${token}`, newData) 
+     .then((res) => {
+        dispatch(authSlice.actions.resetPasswordSuccess(res.data.user));
+        toast.success(res.data.message);
+      });
+  } catch (error) {
+    dispatch(authSlice.actions.resetPasswordFailed());
+    toast.error(error.response.data.message || "failed to reset password.");
+  }
+};
+export const updateAdminProfile = (Data) => async (dispatch) => {
+  dispatch(authSlice.actions.updateProfileRequest());
+  try{
+    await axiosInstance.put(`/auth/profile/update`, Data).then((res) => { 
+        dispatch(authSlice.actions.updateProfileSuccess(res.data.user));
+        toast.success(res.data.message);
+      });
+  } catch (error) {
+    dispatch(authSlice.actions.updateProfileFailed());
+    toast.error(error.response.data.message || "failed to update profile.");
+  }
+};
+
+export const updateAdminPassword = (Data) => async (dispatch) => {
+  dispatch(authSlice.actions.updatePasswordRequest());
+  try{
+    await axiosInstance.put(`/auth/password/update`, Data).then((res) => { 
+        dispatch(authSlice.actions.updatePasswordSuccess());
+        toast.success(res.data.message);
+      });
+  } catch (error) {
+    dispatch(authSlice.actions.updatePasswordFailed());
+    toast.error(error.response.data.message || "failed to update password.");
+  }
+};
+export const resetAuthSlice = () => (dispatch) => {
+  dispatch(authSlice.actions.resetAuthSlice());
+};
+
+
+>>>>>>> 072a69ebe75979ab4f7d1cacf3b80406473f30de
 
 // FORGOT PASSWORD
 export const forgotPassword = (data) => async (dispatch) => {
