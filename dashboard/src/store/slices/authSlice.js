@@ -1,34 +1,36 @@
 import { createSlice } from "@reduxjs/toolkit";
+import axios from "axios";
+
+const initialState = {
+  loading: false,
+  user: null,
+  isAuthenticated: false,
+  error: null,
+};
 
 const authSlice = createSlice({
   name: "auth",
-  initialState: {
-    loading: false,
-    user: null,
-    isAuthenticated: false,
-  },
-
+  initialState,
   reducers: {
-
-
+    // ---------------- LOGIN ----------------
     loginRequest(state) {
       state.loading = true;
+      state.error = null;
     },
     loginSuccess(state, action) {
       state.loading = false;
       state.user = action.payload;
       state.isAuthenticated = true;
     },
-    loginFailed(state) {
+    loginFailed(state, action) {
       state.loading = false;
+      state.error = action.payload;
     },
 
-
-
+    // ---------------- GET USER ----------------
     getUserRequest(state) {
       state.loading = true;
     },
-
     getUserSuccess(state, action) {
       state.loading = false;
       state.user = action.payload;
@@ -40,12 +42,11 @@ const authSlice = createSlice({
       state.isAuthenticated = false;
     },
 
-
-
+    // ---------------- LOGOUT ----------------
     logoutRequest(state) {
       state.loading = true;
     },
-    logoutSuccess(state, action) {
+    logoutSuccess(state) {
       state.loading = false;
       state.user = null;
       state.isAuthenticated = false;
@@ -54,31 +55,31 @@ const authSlice = createSlice({
       state.loading = false;
     },
 
-
+    // ---------------- FORGOT PASSWORD ----------------
     forgotPasswordRequest(state) {
       state.loading = true;
     },
-    forgotPasswordSuccess(state, action) {
+    forgotPasswordSuccess(state) {
       state.loading = false;
     },
     forgotPasswordFailed(state) {
       state.loading = false;
     },
 
-
+    // ---------------- RESET PASSWORD ----------------
     resetPasswordRequest(state) {
       state.loading = true;
     },
     resetPasswordSuccess(state, action) {
       state.loading = false;
-      state.isAuthenticated = true;
       state.user = action.payload;
+      state.isAuthenticated = true;
     },
     resetPasswordFailed(state) {
       state.loading = false;
     },
 
-
+    // ---------------- UPDATE PROFILE ----------------
     updateProfileRequest(state) {
       state.loading = true;
     },
@@ -90,39 +91,148 @@ const authSlice = createSlice({
       state.loading = false;
     },
 
+    // ---------------- UPDATE PASSWORD ----------------
     updatePasswordRequest(state) {
       state.loading = true;
     },
-    updatePasswordSuccess(state, action) {
+    updatePasswordSuccess(state) {
       state.loading = false;
     },
     updatePasswordFailed(state) {
       state.loading = false;
     },
 
-    resetAuthSlice(state) {
-      state.loading = false;
-      state.user = state.user;
-      state.isAuthenticated = state.isAuthenticated;
+    // ---------------- RESET STATE ----------------
+    resetAuthSlice() {
+      return initialState;
     },
   },
 });
 
+export const {
+  loginRequest,
+  loginSuccess,
+  loginFailed,
+  getUserRequest,
+  getUserSuccess,
+  getUserFailed,
+  logoutRequest,
+  logoutSuccess,
+  logoutFailed,
+  forgotPasswordRequest,
+  forgotPasswordSuccess,
+  forgotPasswordFailed,
+  resetPasswordRequest,
+  resetPasswordSuccess,
+  resetPasswordFailed,
+  updateProfileRequest,
+  updateProfileSuccess,
+  updateProfileFailed,
+  updatePasswordRequest,
+  updatePasswordSuccess,
+  updatePasswordFailed,
+  resetAuthSlice,
+} = authSlice.actions;
+
+// ======================= THUNKS =======================
+
+// LOGIN
 export const login = (data) => async (dispatch) => {
-  dispatch(authSlice.actions.loginRequest());
-  await
+  try {
+    dispatch(loginRequest());
+
+    // Replace with your backend URL
+    const response = await axios.post("/api/v1/login", data);
+
+    dispatch(loginSuccess(response.data.user));
+  } catch (error) {
+    dispatch(
+      loginFailed(
+        error.response?.data?.message || "Login failed"
+      )
+    );
+  }
 };
 
-export const getUser = () => async (dispatch) => {};
+// GET USER
+export const getUser = () => async (dispatch) => {
+  try {
+    dispatch(getUserRequest());
 
-export const logout = () => async (dispatch) => {};
+    const response = await axios.get("/api/v1/me");
 
-export const forgotPassword = (data) => async (dispatch) => {};
+    dispatch(getUserSuccess(response.data.user));
+  } catch (error) {
+    dispatch(getUserFailed());
+  }
+};
 
-export const resetPassword = (token, data) => async (dispatch) => {};
+// LOGOUT
+export const logout = () => async (dispatch) => {
+  try {
+    dispatch(logoutRequest());
 
-export const updateProfile = (data) => async (dispatch) => {};
+    await axios.post("/api/v1/logout");
 
-export const updatePassword = (data) => async (dispatch) => {};
+    dispatch(logoutSuccess());
+  } catch (error) {
+    dispatch(logoutFailed());
+  }
+};
+
+// FORGOT PASSWORD
+export const forgotPassword = (data) => async (dispatch) => {
+  try {
+    dispatch(forgotPasswordRequest());
+
+    await axios.post("/api/v1/password/forgot", data);
+
+    dispatch(forgotPasswordSuccess());
+  } catch (error) {
+    dispatch(forgotPasswordFailed());
+  }
+};
+
+// RESET PASSWORD
+export const resetPassword = (token, data) => async (dispatch) => {
+  try {
+    dispatch(resetPasswordRequest());
+
+    const response = await axios.put(
+      `/api/v1/password/reset/${token}`,
+      data
+    );
+
+    dispatch(resetPasswordSuccess(response.data.user));
+  } catch (error) {
+    dispatch(resetPasswordFailed());
+  }
+};
+
+// UPDATE PROFILE
+export const updateProfile = (data) => async (dispatch) => {
+  try {
+    dispatch(updateProfileRequest());
+
+    const response = await axios.put("/api/v1/me/update", data);
+
+    dispatch(updateProfileSuccess(response.data.user));
+  } catch (error) {
+    dispatch(updateProfileFailed());
+  }
+};
+
+// UPDATE PASSWORD
+export const updatePassword = (data) => async (dispatch) => {
+  try {
+    dispatch(updatePasswordRequest());
+
+    await axios.put("/api/v1/password/update", data);
+
+    dispatch(updatePasswordSuccess());
+  } catch (error) {
+    dispatch(updatePasswordFailed());
+  }
+};
 
 export default authSlice.reducer;
