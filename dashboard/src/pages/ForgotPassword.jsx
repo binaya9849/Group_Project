@@ -1,70 +1,67 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, Navigate } from "react-router-dom";
-import { forgotPassword } from "../store/slices/authSlice";
+// dashboard/src/pages/ForgotPassword.jsx
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { forgotPassword } from '../store/slices/authSlice';
+import { Loader2, ArrowLeft } from 'lucide-react';
 
 const ForgotPassword = () => {
-  const [email, setEmail] = useState("");
-  const dispatch = useDispatch();
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    dispatch(forgotPassword({email}));
-    setEmail("");
-  };
+    const [email, setEmail] = useState('');
+    const dispatch = useDispatch();
+    const { loading } = useSelector((state) => state.auth);
 
-const { User,isAuthenticated,loading } = useSelector((state) => state.auth);
-  if (isAuthenticated && User.role === "admin") {
-    return <Navigate to="/" />;
-  }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        dispatch(forgotPassword(email));
+        setEmail('');
+    };
 
-  return <>
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-200 px-4">
-  <div className="bg-white shadow-lg rounded-2xl max-w-md w-full p-8 sm:p-10">
-  <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
-    Forgot Password
-    </h2>
-  <form onSubmit={handleSubmit} className="space-y-5">
-    <div className="p-2">
-      <label 
-      htmlFor="email"
-       className="block text-sm font-medium text-gray-700 mb-1"
-       >
-        Enter yourEmail 
-        </label>
-      <input type="email" name="email" value={formData.email} onChange={(e) => setEmail(e.target.value)} required placeholder="enter your email"
-      className="w-full px-4 py-3 border border-gray-300 rounded-md"
-      />
-    </div>
-     <div className="px-2 flex justify-end items-center justify-between items-center text-sm text-gray-500">
-      
-        <link to={"/login"} type="button" className="text-blue-600 hover:underline">
-       Remember password?
-        </link>
-      </div>
-   
-   
-    <div className="px-2">
-      <button type="submit" className="w-full flex justify-center gap-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 transition"
-      
-      disabled={loading}
-      >
-        {loading ? (
-          <>
-          <div className="w-5 h-5 border-2 bg-white border-t-transparent rounded-full animate-spin"/>
-          <span>Requesting for email...</span>
-          </>
-        ): (
-          "Send Reset Link"
-        )}
-   
-      </button>
-      </div>
-      </form>
-    </div>
-    </div>
-  
-  
-  </>;
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4 sm:px-6 lg:px-8">
+            <div className="max-w-md w-full bg-white p-8 rounded-2xl shadow-lg border border-gray-100">
+                <div className="text-center mb-8">
+                    <h2 className="text-3xl font-extrabold text-gray-900">Forgot Password</h2>
+                    <p className="mt-2 text-sm text-gray-600">Enter your email to receive a password reset link.</p>
+                </div>
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                            className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+                            placeholder="admin@nepa.com"
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        disabled={loading || !email}
+                        className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 font-semibold transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+                    >
+                        {loading ? (
+                            <>
+                                <Loader2 className="animate-spin w-5 h-5 mr-2" />
+                                Requesting...
+                            </>
+                        ) : (
+                            'Send Reset Link'
+                        )}
+                    </button>
+                </form>
+
+                <div className="mt-6 text-center">
+                    <Link to="/login" className="inline-flex items-center text-sm font-medium text-blue-600 hover:text-blue-500">
+                        <ArrowLeft className="w-4 h-4 mr-1" />
+                        Back to Login
+                    </Link>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default ForgotPassword;

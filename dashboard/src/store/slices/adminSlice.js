@@ -18,7 +18,13 @@ const initialState = {
     revenueGrowth: "",
     newUsersThisMonth: 0,
     currentMonthSales: 0,
-  },  reducers: {
+    error: null
+};
+
+const adminSlice = createSlice({
+    name: 'admin',
+    initialState,
+    reducers: {
         getAllUsersRequest: (state) => { state.loading = true; },
         getAllUsersSuccess: (state, action) => {
             state.loading = false;
@@ -52,7 +58,8 @@ const initialState = {
             state.currentMonthSales = action.payload.currentMonthSales;
         },
         getStatsFailed: (state) => { state.loading = false; },
-    },
+    }
+});
 
 export const {
     getAllUsersRequest, getAllUsersSuccess, getAllUsersFailed,
@@ -99,4 +106,3 @@ export const getDashboardStats = () => async (dispatch) => {
         dispatch(getStatsFailed());
     }
 };
-export default adminSlice

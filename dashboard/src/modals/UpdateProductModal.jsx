@@ -1,141 +1,159 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+// dashboard/src/components/models/UpdateProductModal.jsx
+import React, { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { toggleUpdateProductModal } from "../store/slices/extraSlice";
-import { LoaderCircle } from "lucide-react";
-import { updateProduct } from "../store/slices/productsSlice";
+import { updateProduct } from "../store/slices/productSlice";
+import { X, Loader2 } from 'lucide-react';
+
+const categories = [
+    { id: 1, name: 'electronics' },
+    { id: 2, name: 'fashion' },
+    { id: 3, name: 'home & garden' },
+    { id: 4, name: 'sports' },
+    { id: 5, name: 'kids & baby' },
+    { id: 6, name: 'automotive' },
+    { id: 7, name: 'beauty' },
+    { id: 8, name: 'books' }
+];
 
 const UpdateProductModal = ({ selectedProduct }) => {
-  const { loading } = useSelector((state) => state.product);
-  const dispatch = useDispatch();
+    const dispatch = useDispatch();
+    const { loading } = useSelector((state) => state.product);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    description: "",
-    price: "",
-    category: "",
-    stock: "",
-  });
+    const [formData, setFormData] = useState({
+        name: '',
+        description: '',
+        price: '',
+        category: '',
+        stock: ''
+    });
 
-  const categoryOptions = [
-    "Electronics",
-    "Fashion",
-    "Home & Garden",
-    "Sports",
-    "Books",
-    "Beauty",
-    "Automotive",
-    "Kids & Baby",
-  ];
+    useEffect(() => {
+        if (selectedProduct) {
+            setFormData({
+                name: selectedProduct.name || '',
+                description: selectedProduct.description || '',
+                price: selectedProduct.price ? (selectedProduct.price * 283).toString() : '', // Assuming standard conversion used in video
+                category: selectedProduct.category || '',
+                stock: selectedProduct.stock || ''
+            });
+        }
+    }, [selectedProduct]);
 
-  useEffect(() => {
-    if (selectedProduct) {
-      console.log(selectedProduct);
-      setFormData({
-        name: selectedProduct.name || "",
-        description: selectedProduct.description || "",
-        price: selectedProduct.price || "",
-        category: selectedProduct.category || "",
-        stock: selectedProduct.stock || "",
-      });
-    }
-  }, [selectedProduct]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const data = {
-      name: formData.name,
-      description: formData.description,
-      price: formData.price,
-      category: formData.category,
-      stock: formData.stock,
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    dispatch(updateProduct(data, selectedProduct.id));
-  };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        // Since we aren't handling images update in this basic modal, we just send JSON text data
+        dispatch(updateProduct(formData, selectedProduct.id));
+    };
 
-  return (
-    <div className="fixed inset-0 z-50 bg-black bg-opacity-50 flex justify-center items-center p-4">
-      <div className="bg-white rounded-xl w-full max-w-2xl p-6 relative">
-        <button
-          onClick={() => dispatch(toggleUpdateProductModal())}
-          className="absolute top-4 right-4 text-gray-600 hover:text-red-500 text-xl"
-        >
-          &times;
-        </button>
-        <h2 className="text-2xl font-bold mb-4 text-center">Update Product</h2>
+    if (!selectedProduct) return null;
 
-        <form
-          className="grid grid-cols-1 md:grid-cols-2 gap-4"
-          onSubmit={handleSubmit}
-        >
-          <input
-            type="text"
-            placeholder="Title"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            className="border px-4 py-2 rounded"
-          />
-          <select
-            className="w-full border p-2 rounded-lg"
-            value={formData.category}
-            onChange={(e) =>
-              setFormData({ ...formData, category: e.target.value })
-            }
-            required
-          >
-            {categoryOptions.map((cat, idx) => (
-              <option key={idx} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-          <input
-            type="number"
-            placeholder="Price"
-            value={formData.price}
-            onChange={(e) =>
-              setFormData({ ...formData, price: e.target.value })
-            }
-            className="border px-4 py-2 rounded"
-          />
-          <input
-            type="number"
-            placeholder="Stock"
-            value={formData.stock}
-            onChange={(e) =>
-              setFormData({ ...formData, stock: e.target.value })
-            }
-            className="border px-4 py-2 rounded"
-          />
+    return (
+        <div className="fixed inset-0 bg-black/60 z-[60] flex items-center justify-center p-4 overflow-y-auto backdrop-blur-sm">
+            <div className="bg-white rounded-2xl w-full max-w-3xl my-8 shadow-2xl relative animate-in fade-in zoom-in duration-300">
+                <div className="flex justify-between items-center p-6 border-b border-gray-100">
+                    <h2 className="text-2xl font-bold text-gray-800">Update Product</h2>
+                    <button 
+                        onClick={() => dispatch(toggleUpdateProductModal())}
+                        className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-500"
+                    >
+                        <X size={24} />
+                    </button>
+                </div>
 
-          <textarea
-            placeholder="Description"
-            value={formData.description}
-            onChange={(e) =>
-              setFormData({ ...formData, description: e.target.value })
-            }
-            className="border px-4 py-2 rounded col-span-1 md:col-span-2"
-            rows={4}
-          />
+                <form onSubmit={handleSubmit} className="p-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div className="col-span-1 md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
+                            <input 
+                                type="text"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                required
+                                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                            />
+                        </div>
 
-          <button
-            type="submit"
-            className="flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded col-span-1 md:col-span-2"
-          >
-            {loading ? (
-              <>
-                <LoaderCircle className="w-6 h-6 animate-spin" />
-                Updating
-              </>
-            ) : (
-              "Update Product"
-            )}
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+                        <div className="col-span-1 md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                            <textarea 
+                                name="description"
+                                value={formData.description}
+                                onChange={handleChange}
+                                required
+                                rows="4"
+                                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-none"
+                            ></textarea>
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Price (PKR/INR)</label>
+                            <input 
+                                type="number"
+                                name="price"
+                                value={formData.price}
+                                onChange={handleChange}
+                                required
+                                min="0"
+                                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Stock Quantity</label>
+                            <input 
+                                type="number"
+                                name="stock"
+                                value={formData.stock}
+                                onChange={handleChange}
+                                required
+                                min="0"
+                                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                            />
+                        </div>
+
+                        <div className="col-span-1 md:col-span-2">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
+                            <select 
+                                name="category"
+                                value={formData.category}
+                                onChange={handleChange}
+                                required
+                                className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none transition-all capitalize"
+                            >
+                                <option value="" disabled>Select a category</option>
+                                {categories.map(cat => (
+                                    <option key={cat.id} value={cat.name}>{cat.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className="flex justify-end gap-4 pt-4 border-t border-gray-100">
+                        <button 
+                            type="button" 
+                            onClick={() => dispatch(toggleUpdateProductModal())}
+                            className="px-6 py-2.5 rounded-lg font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 transition-colors"
+                        >
+                            Cancel
+                        </button>
+                        <button 
+                            type="submit" 
+                            disabled={loading}
+                            className="px-6 py-2.5 rounded-lg font-medium text-white bg-blue-600 hover:bg-blue-700 transition-colors flex items-center disabled:opacity-50"
+                        >
+                            {loading ? <><Loader2 className="w-5 h-5 mr-2 animate-spin" /> Updating...</> : 'Update Product'}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
 };
 
 export default UpdateProductModal;

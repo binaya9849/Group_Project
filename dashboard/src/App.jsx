@@ -1,11 +1,10 @@
-// dashboard/src/App.jsx
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useSelector, useDispatch } from 'react-redux';
 
-import Sidebar from './components/SideBar';
+import Layout from './components/Layout';
 import Dashboard from './components/Dashboard';
 import Orders from './components/Orders';
 import Users from './components/Users';
@@ -20,29 +19,11 @@ import { getUser } from './store/slices/authSlice';
 
 const App = () => {
     const dispatch = useDispatch();
-    const { openComponent } = useSelector((state) => state.extra);
     const { user, isAuthenticated } = useSelector((state) => state.auth);
 
     useEffect(() => {
         dispatch(getUser());
     }, [dispatch]);
-
-    const renderDashboardComponent = () => {
-        switch (openComponent) {
-            case 'Dashboard':
-                return <Dashboard />;
-            case 'Orders':
-                return <Orders />;
-            case 'Users':
-                return <Users />;
-            case 'Profile':
-                return <Profile />;
-            case 'Products':
-                return <Products />;
-            default:
-                return <Dashboard />;
-        }
-    };
 
     return (
         <Router>
@@ -51,17 +32,19 @@ const App = () => {
                     path="/" 
                     element={
                         isAuthenticated && user?.role === 'ADMIN' ? (
-                            <div className="flex bg-gray-50 min-h-screen">
-                                <Sidebar />
-                                <div className="flex-1 w-full md:ml-72 transition-all duration-300">
-                                    {renderDashboardComponent()}
-                                </div>
-                            </div>
+                            <Layout />
                         ) : (
                             <Navigate to="/login" />
                         )
-                    } 
-                />
+                    }
+                >
+                    <Route index element={<Navigate to="/dashboard" />} />
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="orders" element={<Orders />} />
+                    <Route path="users" element={<Users />} />
+                    <Route path="profile" element={<Profile />} />
+                    <Route path="products" element={<Products />} />
+                </Route>
                 <Route path="/login" element={<Login />} />
                 <Route path="/password/forgot" element={<ForgotPassword />} />
                 <Route path="/password/reset/:token" element={<ResetPassword />} />

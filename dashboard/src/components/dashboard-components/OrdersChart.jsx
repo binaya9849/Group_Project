@@ -1,48 +1,49 @@
-import { useSelector } from "react-redux";
-import { PieChart, Pie, Tooltip, ResponsiveContainer, Cell } from "recharts";
+// dashboard/src/components/dashboard-components/OrderChart.jsx
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { ResponsiveContainer, PieChart, Pie, Cell, Tooltip, Legend } from 'recharts';
 
-const OrdersChart = () => {
-  const { orderStatusCounts } = useSelector((state) => state.admin);
+const OrderChart = () => {
+    const { orderStatusCounts } = useSelector((state) => state.admin);
 
-  const statusColors = {
-    Processing: "#facc15", // yellow
-    Shipped: "#3b82f6", // blue
-    Delivered: "#22c55e", // green
-    Cancelled: "#ef4444", // red
-  };
-  const orderStatusData = Object.keys(orderStatusCounts).map((status) => ({
-    status,
-    count: parseInt(orderStatusCounts[status]),
-  }));
+    const STATUS_COLORS = {
+        Processing: '#eab308',
+        Shipped: '#3b82f6',
+        Delivered: '#22c55e',
+        Cancelled: '#ef4444',
+    };
 
-  return (
-    <>
-      <div className="bg-white p-4 rounded-xl shadow-md">
-        <h3 className="font-semibold mb-2">Order Status</h3>
-        <ResponsiveContainer width="100%" height={200}>
-          <PieChart>
-            <Pie
-              data={orderStatusData}
-              dataKey="count"
-              nameKey="status"
-              cx="50%"
-              cy="50%"
-              outerRadius={80}
-              label
-            >
-              {orderStatusData.map((entry, index) => (
-                <Cell
-                  key={`cell-${index}`}
-                  fill={statusColors[entry.status] || "#ccc"} // fallback color
-                />
-              ))}
-            </Pie>
-            <Tooltip />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
-    </>
-  );
+    const data = orderStatusCounts ? Object.keys(orderStatusCounts).map(status => ({
+        name: status,
+        value: parseInt(orderStatusCounts[status], 10)
+    })).filter(item => item.value > 0) : [];
+
+    return (
+        <div className="bg-white p-4 rounded-xl shadow-md flex flex-col items-center">
+            <h3 className="font-semibold mb-2 w-full text-left">Order Statuses</h3>
+            <div className="w-full h-[250px]">
+                <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                        <Pie
+                            data={data}
+                            cx="50%"
+                            cy="50%"
+                            innerRadius={60}
+                            outerRadius={80}
+                            paddingAngle={5}
+                            dataKey="value"
+                        >
+                            {data.map((entry, index) => (
+                                <Cell key={`cell-${index}`} fill={STATUS_COLORS[entry.name] || '#8884d8'} />
+                            ))}
+                        </Pie>
+                        <Tooltip />
+                        <Legend verticalAlign="bottom" height={36}/>
+                    </PieChart>
+                </ResponsiveContainer>
+            </div>
+        </div>
+    );
 };
 
-export default OrdersChart;
+export default OrderChart;
