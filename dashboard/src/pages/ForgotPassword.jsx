@@ -67,4 +67,4 @@ const { User,isAuthenticated,loading } = useSelector((state) => state.auth);
   </>;
 };
 
-export default ForgotPassword;
+export default ForgotPassword
