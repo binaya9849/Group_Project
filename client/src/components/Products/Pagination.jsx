@@ -44,6 +44,41 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
   return <>
   
+  <div className="flex items-center justify-center space-x-2">
+    {/* PREVIOUS BUTTON */}
+    <button className="p-2 glass-card hover:glow-on-hover animate-smooth disabled:opacity-50 disabled:cursor-not-allowed"
+    onClick={() => onPageChange(currentPage - 1)} 
+    disabled={currentPage === 1}>
+      <ChevronLeft className="w-5 h-5" />
+    </button>
+
+    {/* PAGE NUMBERS */}
+    {getPageNumbers().map((page, index) => {
+      return (
+      <button
+        key={index}
+        onClick={() => typeof page === 'number' && onPageChange(page)}
+        disabled={page === '...'}
+        className={`px-4 py-2 rounded-lg font-medium transition-all ${
+          page === currentPage 
+          ? "gradient-primary text-primary-foreground" 
+          : page === "..."
+          ? "cursor-default text-muted-foreground"
+          : "glass-card hover:glow-on-hover text-foreground hover:text-primary"
+        }`}
+      >
+        {page}
+      </button>
+    )
+    })}
+
+    {/* NEXT BUTTON */}
+    <button className="p-2 glass-card hover:glow-on-hover animate-smooth disabled:opacity-50 disabled:cursor-not-allowed"
+    onClick={() => onPageChange(currentPage + 1)} 
+    disabled={currentPage === totalPages}>
+      <ChevronRight className="w-5 h-5" />
+    </button>
+  </div>
   
   </>;
 };

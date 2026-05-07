@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+// import axiosInstance from "../../lib/axios";
 import axiosInstance from "../../lib/axios";
 import { toast } from "react-toastify";
 import { toggleAuthPopup } from "./popupSlice";
 
-// =======================
+
 // REGISTER
-// =======================
+
 export const register = createAsyncThunk(
   "auth/register",
   async (data, thunkAPI) => {
@@ -27,9 +28,9 @@ export const register = createAsyncThunk(
   }
 );
 
-// =======================
+
 // LOGIN
-// =======================
+
 export const login = createAsyncThunk(
   "auth/login",
   async (data, thunkAPI) => {
@@ -51,9 +52,9 @@ export const login = createAsyncThunk(
   }
 );
 
-// =======================
+
 // GET USER
-// =======================
+
 export const getUser = createAsyncThunk(
   "auth/getUser",
   async (_, thunkAPI) => {
@@ -68,9 +69,9 @@ export const getUser = createAsyncThunk(
   }
 );
 
-// =======================
+
 // LOGOUT
-// =======================
+
 export const logout = createAsyncThunk(
   "auth/logout",
   async (_, thunkAPI) => {
@@ -90,9 +91,8 @@ export const logout = createAsyncThunk(
   }
 );
 
-// =======================
 // FORGOT PASSWORD
-// =======================
+
 export const forgotPassword = createAsyncThunk(
   "auth/forgotPassword",
   async (email, thunkAPI) => {
@@ -117,9 +117,9 @@ export const forgotPassword = createAsyncThunk(
   }
 );
 
-// =======================
+
 // RESET PASSWORD
-// =======================
+
 export const resetPassword = createAsyncThunk(
   "auth/resetPassword",
   async ({ token, password, confirmPassword }, thunkAPI) => {
@@ -142,9 +142,9 @@ export const resetPassword = createAsyncThunk(
   }
 );
 
-// =======================
+
 // UPDATE PASSWORD
-// =======================
+
 export const updatePassword = createAsyncThunk(
   "auth/updatePassword",
   async (data, thunkAPI) => {
@@ -164,9 +164,9 @@ export const updatePassword = createAsyncThunk(
   }
 );
 
-// =======================
+
 // UPDATE PROFILE
-// =======================
+
 export const updateProfile = createAsyncThunk(
   "auth/updateProfile",
   async (data, thunkAPI) => {
@@ -186,9 +186,9 @@ export const updateProfile = createAsyncThunk(
   }
 );
 
-// =======================
+
 // SLICE
-// =======================
+
 const authSlice = createSlice({
   name: "auth",
   initialState: {
@@ -226,6 +226,21 @@ const authSlice = createSlice({
       })
       .addCase(login.rejected, (state) => {
         state.isLoggingIn = false;
+      })
+
+      // GET USER
+      .addCase(getUser.pending, (state) => {
+        state.isCheckingAuth = true;
+      })
+      .addCase(getUser.fulfilled, (state, action) => {
+        state.isCheckingAuth = false;
+        if (action.payload) {
+          state.authUser = action.payload;
+        }
+      })
+      .addCase(getUser.rejected, (state) => {
+        state.isCheckingAuth = false;
+        state.authUser = null;
       })
 
       // LOGOUT
